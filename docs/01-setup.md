@@ -55,11 +55,11 @@ Successful login to the web dashboard confirms a valid installation.
 
 ### Service status examples
 
-![Wazuh manager status](images/01_images/status_wazuh_manager.png)
+![Wazuh manager status](../images/01_images/status_wazuh_manager.png)
 
-![Wazuh indexer status](images/01_images/status_wazuh_indexer.png)
+![Wazuh indexer status](../images/01_images/status_wazuh_indexer.png)
 
-![Wazuh dashboard status](images/01_images/status_wazuh_dashboard.png)
+![Wazuh dashboard status](../images/01_images/status_wazuh_dashboard.png)
 
 ## Troubleshooting (Installer Issues)
 **Check for APT / dpkg lock before running the installer**  
