@@ -53,19 +53,50 @@ sudo systemctl status wazuh-dashboard
 Expected result: `Active: active (running)`  
 Successful login to the web dashboard confirms a valid installation.
 
-## Troubleshooting (Common Lab Issues)
-**APT lock error**  
-If the installer reports another process using APT:
-- Reboot the VM
-- Wait for background updates to finish
-- Re-run the installer
+## Troubleshooting (Installer Issues)
+**Check for APT / dpkg lock before running the installer**  
+```bash
+ps aux | grep -E "apt|dpkg"
+```
+If you see processes like `unattended-upgrades` or `apt.systemd.daily`, wait for them to finish or reboot the VM.
 
-**“Wazuh indexer already installed”**  
-If a previous install failed mid-way, the indexer may remain partially installed. Fix by running:
+**Installer fails due to APT lock**  
+If the installer reports `Another process is using APT`:
+- `sudo reboot`
+- After reboot, wait 2–3 minutes, then retry the installer.
+
+**Clean up a failed or partial installation**  
+If the installer fails mid-way or components are left in a broken state:
+```bash
+sudo systemctl stop wazuh-indexer wazuh-manager wazuh-dashboard 2>/dev/null
+sudo apt remove --purge -y wazuh-* filebeat opensearch-dashboard opensearch
+sudo rm -rf /var/lib/wazuh /var/ossec /etc/wazuh /usr/share/wazuh
+sudo rm -rf /etc/opensearch /var/lib/opensearch
+sudo apt autoremove -y
+sudo apt --fix-broken install -y
+```
+Notes: package “not found” errors are expected if components never fully installed.
+
+**“Wazuh indexer already installed” error**  
+If the installer reports `ERROR: Wazuh indexer already installed`, force a clean overwrite:
 ```bash
 sudo bash ./wazuh-install.sh -a -o
 ```
-This overwrites any existing Wazuh components and performs a clean reinstall.
+This removes existing Wazuh components and reinstalls everything.
+
+**Verify service status after install/reinstall**  
+```bash
+sudo systemctl status wazuh-manager
+sudo systemctl status wazuh-indexer
+sudo systemctl status wazuh-dashboard
+```
+Expected: `Active: active (running)`. Successful dashboard login confirms a good install.
+
+**Check installer logs**  
+If installation fails again, inspect:
+```bash
+sudo less /var/log/wazuh-install.log
+```
 
 ## Optional: VMware Guest Tools
 If running on VMware:
