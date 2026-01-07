@@ -56,6 +56,8 @@ sudo bash ./wazuh-install.sh -a
    
    You should now see the Wazuh dashboard interface.
 
+![Wazuh dashboard overview](../images/01_images/wazuh_dashboard_start.png)
+
 ## Validation
 Confirm all services are running:
 ```bash
