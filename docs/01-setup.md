@@ -61,6 +61,15 @@ Successful login to the web dashboard confirms a valid installation.
 
 ![Wazuh dashboard status](../images/01_images/status_wazuh_dashboard.png)
 
+## Change default dashboard password
+After confirming you can log in with the generated `admin` password, change it to something you control:
+```bash
+sudo /usr/share/wazuh-indexer/plugins/opensearch-security/tools/wazuh-passwords-tool.sh \
+  -u admin -p '<your_password>'
+sudo systemctl restart wazuh-dashboard
+```
+Then log back in to the dashboard using the new password.
+
 ## Troubleshooting (Installer Issues)
 **Check for APT / dpkg lock before running the installer**  
 ```bash
