@@ -35,13 +35,26 @@ sudo bash ./wazuh-install.sh -a
 - Dashboard URL
 - Generated admin password
 
-4) Access the dashboard:
-```
-https://<VM-IP>
-Username: admin
-Password: shown at installer completion
-```
-Accept the self-signed certificate warning.
+4) Access the Wazuh dashboard:
+   - Find your VM's IP address:
+   ```bash
+   ip a
+   ```
+   Look for the IP address under your network interface (usually `eth0` or `ens33`).
+   
+   - Open a web browser and navigate to:
+   ```
+   https://<VM-IP>
+   ```
+   Replace `<VM-IP>` with the IP address you found.
+   
+   - Log in with:
+   - **Username**: `admin`
+   - **Password**: The password shown at installer completion
+   
+   - Accept the self-signed certificate warning (this is expected in a lab environment).
+   
+   You should now see the Wazuh dashboard interface.
 
 ## Validation
 Confirm all services are running:
