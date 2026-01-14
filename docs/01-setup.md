@@ -31,6 +31,12 @@ If the installer fails, reboot and wait a few minutes before retrying.
 curl -sO https://packages.wazuh.com/4.14/wazuh-install.sh
 sudo bash ./wazuh-install.sh -a
 ```
+
+**Command explanation**
+
+- **`curl -sO`**: Downloads the `wazuh-install.sh` script from Wazuh without verbose output (`-s`) and saves it using the original filename (`-O`).
+- **`sudo bash ./wazuh-install.sh -a`**: Runs the installer with **all-in-one mode**:
+  - `-a`: Installs **manager, indexer, and dashboard** on the same VM (ideal for lab use).
 3) When the installer finishes, note:
 - Dashboard URL
 - Generated admin password
@@ -41,6 +47,11 @@ sudo bash ./wazuh-install.sh -a
    ip a
    ```
    Look for the IP address under your network interface (usually `eth0` or `ens33`).
+
+   **Command explanation**
+
+   - **`ip a`**: Shows all network interfaces and their IP addresses.  
+     - In most labs, you’ll use the IPv4 address on your main interface (often in a `192.168.x.x` or `10.x.x.x` range).
    
    - Open a web browser and navigate to:
    ```
@@ -65,6 +76,13 @@ sudo systemctl status wazuh-manager
 sudo systemctl status wazuh-indexer
 sudo systemctl status wazuh-dashboard
 ```
+
+**Command explanation**
+
+- **`systemctl status <service>`**: Shows whether a service is **active (running)**, stopped, or failed, plus recent log lines.
+- **`wazuh-manager`**: Core manager component (rules, analysis, agent handling).
+- **`wazuh-indexer`**: Stores and indexes events (OpenSearch backend).
+- **`wazuh-dashboard`**: Web UI that queries the indexer and manager.
 Expected result: `Active: active (running)`  
 Successful login to the web dashboard confirms a valid installation.
 
@@ -85,12 +103,25 @@ sudo systemctl restart wazuh-dashboard
 ```
 Then log back in to the dashboard using the new password.
 
+**Command explanation**
+
+- **`wazuh-passwords-tool.sh`**: Utility to change credentials for Wazuh components.
+- **`-u admin`**: Specifies the **user account** whose password you are changing.
+- **`-p '<your_password>'`**: The **new password** to set (replace with your own secure value).
+- **`systemctl restart wazuh-dashboard`**: Restarts the web UI so it picks up the new credentials.
+
 ## Troubleshooting (Installer Issues)
 **Check for APT / dpkg lock before running the installer**  
 ```bash
 ps aux | grep -E "apt|dpkg"
 ```
 If you see processes like `unattended-upgrades` or `apt.systemd.daily`, wait for them to finish or reboot the VM.
+
+**Command explanation**
+
+- **`ps aux`**: Lists all running processes with details.
+- **`grep -E "apt|dpkg"`**: Filters for package-management processes (APT, dpkg).  
+  - If they appear, the package manager is busy and the installer may fail with a lock error.
 
 **Installer fails due to APT lock**  
 If the installer reports `Another process is using APT`:
@@ -109,12 +140,26 @@ sudo apt --fix-broken install -y
 ```
 Notes: package “not found” errors are expected if components never fully installed.
 
+**Command explanation**
+
+- **`systemctl stop ...`**: Stops any Wazuh-related services that might still be running.
+- **`apt remove --purge -y wazuh-* ...`**: Uninstalls Wazuh, Filebeat, and OpenSearch packages and their configuration (`--purge`), auto-accepting prompts (`-y`).
+- **`rm -rf /var/lib/... /etc/...`**: Deletes leftover data/config directories to fully clean the install.
+- **`apt autoremove -y`**: Cleans up unused dependencies.
+- **`apt --fix-broken install -y`**: Asks APT to repair any broken package dependencies.
+
 **“Wazuh indexer already installed” error**  
 If the installer reports `ERROR: Wazuh indexer already installed`, force a clean overwrite:
 ```bash
 sudo bash ./wazuh-install.sh -a -o
 ```
 This removes existing Wazuh components and reinstalls everything.
+
+**Command explanation**
+
+- **`-a`**: All-in-one deployment (manager, indexer, dashboard).
+- **`-o`**: **Overwrite mode** – removes any existing Wazuh installation and performs a fresh install.  
+  - Useful when a previous install is corrupted or partially removed.
 
 **Verify service status after install/reinstall**  
 ```bash
