@@ -96,37 +96,43 @@ All commands must be run on the **agent VM**.
 - Navigate to **Endpoints**  
 - Click **Deploy new agent**
 
+![Deploy new agent button](../images/02_images/deploy_agent.png)
+
 ### Step 2: Select Platform and Package
 
 Choose the operating system and architecture of the agent VM.
 
 For Ubuntu labs:
 
-- **Linux**  
-- **DEB amd64**
+- Select **Linux**  
+- Select **DEB amd64**
 
 The dashboard will tailor commands to this selection.
 
-### Step 3: Server Address
+![Select platform and package](../images/02_images/select_package.png)
 
-Enter the Wazuh manager IP address:
+### Step 3: Enter Agent Name and Server Address
 
-- Use the private IP (e.g. `192.168.65.x`)  
-- FQDN is optional for labs
+In the dashboard, enter:
+
+- **Agent name**: A descriptive name (e.g., `ubuntu-client-01`)
+- **Server address**: The Wazuh manager IP address
+  - Use the private IP (e.g. `192.168.65.x`)  
+  - FQDN is optional for labs
 
 This address is used by the agent to communicate with the manager.
 
 ### Step 4: Install the Agent (Agent VM)
 
-Run the generated installation command on the agent VM.
+The dashboard will generate installation commands. Run these on the **agent VM**:
 
-Example for Ubuntu:
+Download the agent package:
 
 ```bash
 wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.14.1-1_amd64.deb
 ```
 
-Install and register the agent:
+Install and register the agent (replace `YOUR_MANAGER_IP` with your manager IP):
 
 ```bash
 sudo WAZUH_MANAGER="YOUR_MANAGER_IP" \
@@ -149,6 +155,8 @@ Verify:
 ```bash
 sudo systemctl status wazuh-agent
 ```
+
+![Start agent service commands](../images/02_images/start_agent.png)
 
 ## Agent Enrollment (Required)
 
@@ -193,6 +201,10 @@ ID: 001, Name: ubuntu-client-01, Active
 
 - Go to **Endpoints**  
 - Confirm the agent status is **Active**
+
+The agent should now appear in the dashboard with status **Active**, showing OS, IP address, and version information.
+
+![Active agent in dashboard](../images/02_images/agent_active.png)
 
 ## Common Pitfalls
 
