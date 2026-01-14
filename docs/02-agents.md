@@ -1,87 +1,132 @@
-This section documents how to add a new agent (endpoint) to a Wazuh SIEM deployment.  
-In this lab, the agent runs on a separate Ubuntu VM that simulates a client machine being monitored by the Wazuh manager.
+## Adding a Wazuh Agent (Endpoint)
 
-## Overview
+This section documents how to deploy and enroll a Wazuh agent in a lab environment.  
+The agent represents a monitored endpoint and runs on a separate Ubuntu VM, sending telemetry to the Wazuh manager.
 
-Wazuh follows a manager–agent architecture:
+This guide assumes the Wazuh manager, indexer, and dashboard are already installed and running (see `01-setup.md`).
 
-**Manager VM**  
-Central component responsible for:
+## Architecture Overview
 
-- Receiving events from agents  
-- Correlation, rules, and alerting  
+Wazuh follows a manager–agent model.
+
+### Manager (Already Installed)
+
+The manager is responsible for:
+
+- Receiving logs and events from agents  
+- Running detection rules and correlation  
 - Storing data in the indexer  
-- Providing the dashboard UI
+- Providing the dashboard interface
 
-**Agent VM (Client)**  
-Lightweight endpoint that:
+### Agent (This Section)
 
-- Collects logs, system events, file integrity data  
-- Sends telemetry to the manager  
-- Appears as a registered agent in the dashboard
+The agent is a lightweight endpoint component that:
+
+- Collects system logs and security events  
+- Performs file integrity monitoring (FIM)  
+- Sends data securely to the manager  
+- Appears as a registered endpoint in the dashboard
 
 ⚠️ **Important**  
-The agent must be installed on a separate machine.  
-Running the agent on the manager VM defeats the purpose of endpoint monitoring.
+The agent must be installed on a separate VM.  
+Installing an agent on the manager defeats the purpose of endpoint monitoring.
 
 ## Lab Requirements
 
 ### Virtual Machines
 
-- **1 × Manager VM**
+- **1 × Wazuh Manager VM** (from `01-setup.md`)  
 - **1 × Agent (Client) VM**  
-  Ubuntu Server/Desktop is recommended for consistency.
+  Ubuntu Server or Desktop recommended
 
-### Hardware (Strong Recommendation)
+### Hardware Notes
 
-- **At least 8 GB RAM on the Manager VM**
-  - Wazuh Indexer (OpenSearch) is memory-intensive  
-  - 4 GB is the absolute minimum and often unstable  
-  - 8 GB provides reliable startup and agent enrollment
-- **Agent VM** can run comfortably with **1–2 GB RAM**
+**Manager VM**
 
-### Network Requirements
+- Minimum: **4 GB RAM** (often unstable)  
+- Recommended: **8 GB RAM** for reliable startup and agent enrollment
 
-- **Both VMs must be on the same network**  
-  (e.g. VMware NAT / `VMnet8`)
-- **Agent must be able to reach the manager IP**
-- No DNS tricks are required; IP-based communication is sufficient (IP-only is fine).
+**Agent VM**
 
-### Firewall Configuration (Manager VM)
+- **1–2 GB RAM** is sufficient
 
-The manager must allow inbound traffic from agents.  
-If Ubuntu UFW is enabled, the following ports are required:
+### Network
+
+- Both VMs must be able to communicate  
+- Same NAT / host-only network is sufficient  
+- IP-based communication is fine (no DNS required)
+
+### Firewall Requirements (Manager VM)
+
+If UFW is enabled on the manager, the following ports must be open before enrolling agents:
 
 ```bash
-# Agent enrollment (required)
+# Agent enrollment
 sudo ufw allow 1515/tcp
 
 # Agent communication
 sudo ufw allow 1514/tcp
 sudo ufw allow 1514/udp
 
-# Optional (dashboard & indexer access)
-sudo ufw allow 5601/tcp
-sudo ufw allow 9200/tcp
-
 sudo ufw reload
 ```
 
-Without these rules, agents will fail to enroll even if services are running.
+Without TCP/1515, agents will fail to enroll even if all services are running.
 
-## Installing the Agent (Client VM)
+## Agent State in the Dashboard
 
-### 1. Download the Wazuh agent package
+### Before Deployment
 
-Run this on the **agent VM**:
+When no agents are registered, the **Endpoints** page shows an empty state prompting deployment.
+
+### After Successful Enrollment
+
+Once an agent connects successfully, it appears as **Active**, with OS, IP, and version populated.
+
+## Deploying the Agent (Dashboard-Guided Flow)
+
+The Wazuh Dashboard provides a guided workflow that generates the correct installation commands for the agent OS.
+
+The dashboard does **not** install the agent automatically.  
+All commands must be run on the **agent VM**.
+
+### Step 1: Start Agent Deployment
+
+- Open the Wazuh Dashboard  
+- Navigate to **Endpoints**  
+- Click **Deploy new agent**
+
+### Step 2: Select Platform and Package
+
+Choose the operating system and architecture of the agent VM.
+
+For Ubuntu labs:
+
+- **Linux**  
+- **DEB amd64**
+
+The dashboard will tailor commands to this selection.
+
+### Step 3: Server Address
+
+Enter the Wazuh manager IP address:
+
+- Use the private IP (e.g. `192.168.65.x`)  
+- FQDN is optional for labs
+
+This address is used by the agent to communicate with the manager.
+
+### Step 4: Install the Agent (Agent VM)
+
+Run the generated installation command on the agent VM.
+
+Example for Ubuntu:
 
 ```bash
 wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.14.1-1_amd64.deb
 ```
 
-### 2. Install and register the agent
-
-Replace `YOUR_MANAGER_IP` with the actual IP address of your Wazuh manager.
+Install and register the agent:
 
 ```bash
 sudo WAZUH_MANAGER="YOUR_MANAGER_IP" \
@@ -89,9 +134,12 @@ sudo WAZUH_MANAGER="YOUR_MANAGER_IP" \
      dpkg -i wazuh-agent_4.14.1-1_amd64.deb
 ```
 
-### 3. Enable and start the agent service
+### Step 5: Start the Agent Service
+
+After installation, enable and start the agent:
 
 ```bash
+sudo systemctl daemon-reload
 sudo systemctl enable wazuh-agent
 sudo systemctl start wazuh-agent
 ```
@@ -102,12 +150,10 @@ Verify:
 sudo systemctl status wazuh-agent
 ```
 
-## Agent Enrollment (Required Step)
+## Agent Enrollment (Required)
 
-Installing the agent is **not** enough.  
+Installing the agent package alone is not sufficient.  
 Each agent must authenticate with the manager.
-
-### 4. Enroll the agent with the manager
 
 Run on the **agent VM**:
 
@@ -115,13 +161,13 @@ Run on the **agent VM**:
 sudo /var/ossec/bin/agent-auth -m YOUR_MANAGER_IP
 ```
 
-Successful output:
+Expected output:
 
 ```text
 INFO: Authorization successful.
 ```
 
-Then restart the agent:
+Restart the agent:
 
 ```bash
 sudo systemctl restart wazuh-agent
@@ -131,7 +177,7 @@ sudo systemctl restart wazuh-agent
 
 ### On the Manager VM
 
-Check registered agents:
+List registered agents:
 
 ```bash
 sudo /var/ossec/bin/agent_control -lc
@@ -143,21 +189,23 @@ Expected output:
 ID: 001, Name: ubuntu-client-01, Active
 ```
 
-### Dashboard
+### In the Dashboard
 
-- Open the Wazuh Dashboard  
-- Navigate to **Agents**  
-- You should now see **1 active agent**
+- Go to **Endpoints**  
+- Confirm the agent status is **Active**
 
-## Common Pitfalls (Lessons Learned)
+## Common Pitfalls
 
-- **Agent service running ≠ agent registered**
-- **`wazuh-authd` may be running but UFW can silently block TCP/1515**
-- **Manager startup on low RAM can delay agent enrollment**
+- **Agent service running ≠ agent enrolled**  
+- **UFW silently blocking TCP/1515**  
+- **Manager running on low RAM delaying enrollment**
 
-Always verify:
+If the agent does not appear:
 
-- **Manager is running**
-- **Port 1515 is listening**
-- **Firewall allows inbound agent traffic**
+- Confirm manager services are running  
+- Check port **1515** is listening  
+- Review agent logs:
 
+```bash
+sudo tail -f /var/ossec/logs/ossec.log
+```
