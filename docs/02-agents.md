@@ -73,6 +73,12 @@ sudo ufw reload
 
 Without TCP/1515, agents will fail to enroll even if all services are running.
 
+**Command / port explanation**
+
+- **1515/tcp**: Port used by the manager for **agent enrollment** (`agent-auth` connects here). If this is blocked, new agents cannot register.
+- **1514/tcp** and **1514/udp**: Ports used for **log/telemetry traffic** from agents to the manager.
+- **`sudo ufw reload`**: Applies the new firewall rules without rebooting.
+
 ## Agent State in the Dashboard
 
 ### Before Deployment
@@ -140,6 +146,14 @@ sudo WAZUH_MANAGER="YOUR_MANAGER_IP" \
      dpkg -i wazuh-agent_4.14.1-1_amd64.deb
 ```
 
+**Parameter explanation**
+
+- **`WAZUH_MANAGER`**: The IP address or hostname of the **Wazuh manager**.  
+  - In a lab, this is usually the private IP of your Wazuh VM (e.g. `192.168.65.x`).
+- **`WAZUH_AGENT_NAME`**: The **logical name** of this endpoint as it will appear in the dashboard and CLI (e.g. `ubuntu-client-01`).  
+  - You can change this to match the host purpose, like `web01`, `win10-lab`, etc.
+- **`dpkg -i`**: Installs the downloaded `.deb` package on Ubuntu/Debian systems.
+
 ### Step 5: Start the Agent Service
 
 After installation, enable and start the agent:
@@ -169,6 +183,12 @@ Run on the **agent VM**:
 sudo /var/ossec/bin/agent-auth -m YOUR_MANAGER_IP
 ```
 
+**Command explanation**
+
+- **`/var/ossec/bin/agent-auth`**: Wazuh **agent enrollment client**.
+- **`-m YOUR_MANAGER_IP`**: The `-m` option tells the agent which **manager IP/host** to contact for registration.  
+  - This must match the IP you used in `WAZUH_MANAGER` and in the dashboard server address.
+
 Expected output:
 
 ```text
@@ -190,6 +210,12 @@ List registered agents:
 ```bash
 sudo /var/ossec/bin/agent_control -lc
 ```
+
+**Command explanation**
+
+- **`agent_control`**: Manager-side tool to **query and control agents**.
+- **`-l`**: List all agents known to the manager.
+- **`-c`**: Include **connection status** (active, never connected, disconnected, etc.) in the output.
 
 Expected output:
 
