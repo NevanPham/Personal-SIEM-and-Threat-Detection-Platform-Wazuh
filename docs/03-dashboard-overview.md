@@ -181,12 +181,6 @@ Seeing integrity events in a lab environment is normal and confirms that file in
 
 ---
 
-### Agent Details Summary
-
-These sections provide a **high-level snapshot** of the agent’s current state and security posture:
-
----
-
 ## Last 24 Hours Alerts
 
 ### What it is
