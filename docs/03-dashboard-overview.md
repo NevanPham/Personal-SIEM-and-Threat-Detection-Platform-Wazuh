@@ -183,13 +183,7 @@ Seeing integrity events in a lab environment is normal and confirms that file in
 
 ### Agent Details Summary
 
-Together, these sections provide a **high-level snapshot** of the agent’s security posture:
-
-- Known vulnerabilities (Vulnerability Detection)
-- Configuration posture against benchmarks (SCA)
-- Filesystem change activity (FIM)
-
-They are designed to confirm **visibility and signal generation**, not to determine incidents or risk on their own.
+These sections provide a **high-level snapshot** of the agent’s current state and security posture:
 
 ---
 
