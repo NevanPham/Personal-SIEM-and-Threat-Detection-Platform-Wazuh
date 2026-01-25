@@ -118,15 +118,78 @@ Populated charts are expected and do not imply non-compliance or risk.
 
 ---
 
-### Summary
+#### Vulnerability Detection
 
-Together, these sections describe the **current operational state** of the agent:
-- It is active and reporting
-- Inventory and telemetry collection are functioning
-- Security signals are being categorized and visualized
+The **Vulnerability Detection** section summarizes known vulnerabilities identified on the agent based on installed packages.
 
-They provide context and confidence in agent visibility, not confirmation of security incidents.
+It includes:
+- Counts of detected vulnerabilities grouped by severity (Critical, High, Medium, Low)
+- A list of the most frequently affected packages, if any are present
 
+**Purpose**
+- Provides visibility into known software vulnerabilities affecting the endpoint
+- Confirms that vulnerability scanning is enabled and running
+
+**Note**  
+Detected vulnerabilities indicate **potential exposure**, not exploitation.  
+The absence of findings does not guarantee that the system is secure.
+
+**Lab interpretation**  
+Zero or low findings are common in fresh or lightly used lab systems and do not reflect real-world exposure levels.
+
+---
+
+#### Security Configuration Assessment (SCA)
+
+The **SCA: Latest scans** section shows the results of recent configuration assessments performed against security benchmarks.
+
+It includes:
+- The benchmark or policy used (e.g. CIS Ubuntu Linux Benchmark)
+- Timestamp of the last completed scan
+- Number of passed, failed, and not applicable checks
+- An overall compliance score
+
+**Purpose**
+- Evaluates system configuration against hardening guidelines
+- Provides a baseline view of security posture
+
+**Note**  
+Low scores are common on default installations.  
+This does not indicate misconfiguration or compromise.
+
+**Lab interpretation**  
+Failing checks are expected unless the system has been explicitly hardened.
+
+---
+
+#### File Integrity Monitoring (FIM)
+
+The **FIM: Recent events** section displays recent file integrity events detected on the agent.
+
+It includes:
+- Timestamp of the event
+- File path affected
+- Action performed (e.g. modified)
+- Rule description and severity level
+
+**Purpose**
+- Tracks changes to monitored files and directories
+- Provides visibility into filesystem activity
+
+**Lab interpretation**  
+Seeing integrity events in a lab environment is normal and confirms that file integrity monitoring is functioning.
+
+---
+
+### Agent Details Summary
+
+Together, these sections provide a **high-level snapshot** of the agent’s security posture:
+
+- Known vulnerabilities (Vulnerability Detection)
+- Configuration posture against benchmarks (SCA)
+- Filesystem change activity (FIM)
+
+They are designed to confirm **visibility and signal generation**, not to determine incidents or risk on their own.
 
 ---
 
