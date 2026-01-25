@@ -1,90 +1,87 @@
-
 # Wazuh Setup (Lab)
 
-This guide installs the Wazuh manager, indexer, and dashboard on a single Ubuntu VM using the official quickstart installer.
-This setup is intended for learning and lab purposes, not production.
+This is how I set up Wazuh on a single Ubuntu VM. I'm using the official quickstart installer which puts the manager, indexer, and dashboard all on one machine - perfect for a lab environment.
 
-## Environment
+## My Setup
 - OS: Ubuntu (64-bit)
-- Deployment: Single host (manager, indexer, dashboard on one VM)
-- Hypervisor: VMware / VirtualBox / Hyper-V
+- Everything on one VM (manager, indexer, dashboard)
+- Running on VMware (but VirtualBox or Hyper-V should work fine too)
 
-## VM Requirements
-- 2+ vCPU
-- 4+ GB RAM (8 GB recommended if possible)
-- 25+ GB disk
-- Internet access
+## What You'll Need
+- 2+ vCPU cores
+- At least 4 GB RAM (8 GB is better if you can swing it)
+- 25+ GB disk space
+- Internet connection
 
-## Prerequisites
+## Before You Start
 - Fresh Ubuntu VM
 - sudo access
-- curl installed
-- No other package installations running (apt, Software Updater)
+- curl installed (usually comes with Ubuntu)
+- Make sure nothing else is installing packages (no apt or Software Updater running)
 
-⚠️ On fresh Ubuntu installs, background updates may temporarily lock APT.  
-If the installer fails, reboot and wait a few minutes before retrying.
+⚠️ Heads up: On a fresh Ubuntu install, background updates might lock APT. If the installer fails, just reboot and wait a few minutes before trying again.
 
-## Install Wazuh (Single Host)
-1) SSH into the Ubuntu VM.  
-2) Download and run the installer:
+## Installing Wazuh
+
+1. SSH into your Ubuntu VM
+
+2. Download and run the installer:
 ```bash
 curl -sO https://packages.wazuh.com/4.14/wazuh-install.sh
 sudo bash ./wazuh-install.sh -a
 ```
 
-**Command explanation**
+**What these commands do:**
+- `curl -sO` downloads the installer script quietly and saves it with the original name
+- `sudo bash ./wazuh-install.sh -a` runs it in all-in-one mode, which installs the manager, indexer, and dashboard on the same VM (great for labs)
 
-- **`curl -sO`**: Downloads the `wazuh-install.sh` script from Wazuh without verbose output (`-s`) and saves it using the original filename (`-O`).
-- **`sudo bash ./wazuh-install.sh -a`**: Runs the installer with **all-in-one mode**:
-  - `-a`: Installs **manager, indexer, and dashboard** on the same VM (ideal for lab use).
-3) When the installer finishes, note:
-- Dashboard URL
-- Generated admin password
+3. When it finishes, the installer will show you:
+- The dashboard URL
+- An auto-generated admin password (write this down!)
 
-4) Access the Wazuh dashboard:
-   - Find your VM's IP address:
+4. Access the dashboard:
+   - First, find your VM's IP address:
    ```bash
    ip a
    ```
-   Look for the IP address under your network interface (usually `eth0` or `ens33`).
+   Look for the IP under your network interface (usually `eth0` or `ens33`).
 
-   **Command explanation**
+   **What `ip a` does:**
+   - Shows all your network interfaces and their IP addresses
+   - In most labs, you'll want the IPv4 address on your main interface (usually something like `192.168.x.x` or `10.x.x.x`)
 
-   - **`ip a`**: Shows all network interfaces and their IP addresses.  
-     - In most labs, you’ll use the IPv4 address on your main interface (often in a `192.168.x.x` or `10.x.x.x` range).
-   
-   - Open a web browser and navigate to:
+   - Open your web browser and go to:
    ```
    https://<VM-IP>
    ```
-   Replace `<VM-IP>` with the IP address you found.
-   
+   Replace `<VM-IP>` with the IP you just found.
+
    - Log in with:
-   - **Username**: `admin`
-   - **Password**: The password shown at installer completion
-   
-   - Accept the self-signed certificate warning (this is expected in a lab environment).
-   
-   You should now see the Wazuh dashboard interface.
+   - Username: `admin`
+   - Password: The one the installer showed you
+
+   - You'll get a self-signed certificate warning - that's normal for a lab, just accept it.
+
+   You should now see the Wazuh dashboard!
 
 ![Wazuh dashboard overview](../images/01_images/wazuh_dashboard_start.png)
 
-## Validation
-Confirm all services are running:
+## Making Sure Everything Works
+
+Check that all the services are running:
 ```bash
 sudo systemctl status wazuh-manager
 sudo systemctl status wazuh-indexer
 sudo systemctl status wazuh-dashboard
 ```
 
-**Command explanation**
+**What `systemctl status` does:**
+- Shows you if a service is running, stopped, or failed, plus recent log entries
+- `wazuh-manager` is the core component (handles rules, analysis, and agents)
+- `wazuh-indexer` stores and indexes events (uses OpenSearch)
+- `wazuh-dashboard` is the web interface
 
-- **`systemctl status <service>`**: Shows whether a service is **active (running)**, stopped, or failed, plus recent log lines.
-- **`wazuh-manager`**: Core manager component (rules, analysis, agent handling).
-- **`wazuh-indexer`**: Stores and indexes events (OpenSearch backend).
-- **`wazuh-dashboard`**: Web UI that queries the indexer and manager.
-Expected result: `Active: active (running)`  
-Successful login to the web dashboard confirms a valid installation.
+You want to see `Active: active (running)` for all three. If you can log into the web dashboard, you're good to go!
 
 ### Service status examples
 
@@ -94,42 +91,42 @@ Successful login to the web dashboard confirms a valid installation.
 
 ![Wazuh dashboard status](../images/01_images/status_wazuh_dashboard.png)
 
-## Change default dashboard password
-After confirming you can log in with the generated `admin` password, change it to something you control:
+## Changing the Default Password
+
+Once you've confirmed you can log in with the generated password, change it to something you'll remember:
 ```bash
 sudo /usr/share/wazuh-indexer/plugins/opensearch-security/tools/wazuh-passwords-tool.sh \
   -u admin -p '<your_password>'
 sudo systemctl restart wazuh-dashboard
 ```
-Then log back in to the dashboard using the new password.
+Then log back in with your new password.
 
-**Command explanation**
+**What this does:**
+- `wazuh-passwords-tool.sh` is the utility for changing Wazuh credentials
+- `-u admin` tells it which user to change
+- `-p '<your_password>'` is your new password (use your own!)
+- `systemctl restart wazuh-dashboard` restarts the web UI so it picks up the new password
 
-- **`wazuh-passwords-tool.sh`**: Utility to change credentials for Wazuh components.
-- **`-u admin`**: Specifies the **user account** whose password you are changing.
-- **`-p '<your_password>'`**: The **new password** to set (replace with your own secure value).
-- **`systemctl restart wazuh-dashboard`**: Restarts the web UI so it picks up the new credentials.
+## Troubleshooting
 
-## Troubleshooting (Installer Issues)
-**Check for APT / dpkg lock before running the installer**  
+**Check if APT is locked before running the installer**  
 ```bash
 ps aux | grep -E "apt|dpkg"
 ```
-If you see processes like `unattended-upgrades` or `apt.systemd.daily`, wait for them to finish or reboot the VM.
+If you see processes like `unattended-upgrades` or `apt.systemd.daily`, wait for them to finish or just reboot the VM.
 
-**Command explanation**
+**What this does:**
+- `ps aux` lists all running processes
+- `grep -E "apt|dpkg"` filters for package management processes
+- If you see any, the package manager is busy and the installer might fail
 
-- **`ps aux`**: Lists all running processes with details.
-- **`grep -E "apt|dpkg"`**: Filters for package-management processes (APT, dpkg).  
-  - If they appear, the package manager is busy and the installer may fail with a lock error.
+**Installer fails with APT lock error**  
+If you get `Another process is using APT`:
+- Run `sudo reboot`
+- After it comes back up, wait 2–3 minutes, then try the installer again
 
-**Installer fails due to APT lock**  
-If the installer reports `Another process is using APT`:
-- `sudo reboot`
-- After reboot, wait 2–3 minutes, then retry the installer.
-
-**Clean up a failed or partial installation**  
-If the installer fails mid-way or components are left in a broken state:
+**Clean up a failed installation**  
+If the installer failed partway through or things are broken:
 ```bash
 sudo systemctl stop wazuh-indexer wazuh-manager wazuh-dashboard 2>/dev/null
 sudo apt remove --purge -y wazuh-* filebeat opensearch-dashboard opensearch
@@ -138,45 +135,44 @@ sudo rm -rf /etc/opensearch /var/lib/opensearch
 sudo apt autoremove -y
 sudo apt --fix-broken install -y
 ```
-Notes: package “not found” errors are expected if components never fully installed.
+Don't worry if you see "package not found" errors - that just means those components never fully installed.
 
-**Command explanation**
+**What this cleanup does:**
+- Stops any Wazuh services that might still be running
+- Uninstalls all Wazuh, Filebeat, and OpenSearch packages and their configs
+- Deletes leftover data and config directories
+- Cleans up unused dependencies
+- Fixes any broken package dependencies
 
-- **`systemctl stop ...`**: Stops any Wazuh-related services that might still be running.
-- **`apt remove --purge -y wazuh-* ...`**: Uninstalls Wazuh, Filebeat, and OpenSearch packages and their configuration (`--purge`), auto-accepting prompts (`-y`).
-- **`rm -rf /var/lib/... /etc/...`**: Deletes leftover data/config directories to fully clean the install.
-- **`apt autoremove -y`**: Cleans up unused dependencies.
-- **`apt --fix-broken install -y`**: Asks APT to repair any broken package dependencies.
-
-**“Wazuh indexer already installed” error**  
-If the installer reports `ERROR: Wazuh indexer already installed`, force a clean overwrite:
+**"Wazuh indexer already installed" error**  
+If the installer says the indexer is already installed, force a clean reinstall:
 ```bash
 sudo bash ./wazuh-install.sh -a -o
 ```
-This removes existing Wazuh components and reinstalls everything.
+This removes everything and does a fresh install.
 
-**Command explanation**
+**What `-o` does:**
+- `-a` is all-in-one mode (manager, indexer, dashboard)
+- `-o` is overwrite mode - it removes any existing Wazuh installation and starts fresh
+- Useful when a previous install got messed up or partially removed
 
-- **`-a`**: All-in-one deployment (manager, indexer, dashboard).
-- **`-o`**: **Overwrite mode** – removes any existing Wazuh installation and performs a fresh install.  
-  - Useful when a previous install is corrupted or partially removed.
-
-**Verify service status after install/reinstall**  
+**Check services after install/reinstall**  
 ```bash
 sudo systemctl status wazuh-manager
 sudo systemctl status wazuh-indexer
 sudo systemctl status wazuh-dashboard
 ```
-Expected: `Active: active (running)`. Successful dashboard login confirms a good install.
+You want `Active: active (running)` for all three. If you can log into the dashboard, you're all set.
 
-**Check installer logs**  
-If installation fails again, inspect:
+**Check installer logs if something goes wrong**  
+If installation keeps failing, take a look at:
 ```bash
 sudo less /var/log/wazuh-install.log
 ```
 
 ## Optional: VMware Guest Tools
-If running on VMware:
+
+If you're running this on VMware, you might want to install the guest tools for better integration:
 ```bash
 sudo apt update
 sudo apt install -y open-vm-tools open-vm-tools-desktop
@@ -186,7 +182,5 @@ sudo reboot
 ## Notes
 - Ubuntu ISO: [ubuntu.com/download/desktop](https://ubuntu.com/download/desktop)
 - Installer reference: [Wazuh Quickstart](https://documentation.wazuh.com/current/quickstart.html)
-- Credentials and certificates are stored in the installer output bundle (`wazuh-install-files.tar`)
-- This lab uses a single-node deployment for simplicity
-- Production environments typically separate components
-
+- The installer saves credentials and certificates in `wazuh-install-files.tar`
+- This is a single-node setup for simplicity - production usually separates these components
