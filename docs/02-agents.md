@@ -2,8 +2,6 @@
 
 This is how I set up and enrolled a Wazuh agent in my lab. The agent runs on a separate Ubuntu VM and sends data back to the Wazuh manager so I can monitor it.
 
-Make sure you've already got the Wazuh manager, indexer, and dashboard running (see `01-setup.md`) before you start this.
-
 ## How It Works
 
 Wazuh uses a manager–agent setup.
