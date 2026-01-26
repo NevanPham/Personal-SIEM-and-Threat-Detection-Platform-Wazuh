@@ -29,7 +29,7 @@ tells you if endpoints are visible and talking to manager. just connectivity stu
 click on an agent from the summary panel to see detailed view with current state, activity level, and security context for that endpoint.
 
 ![Agents Details View](../images/03_images/agent_summary/agent_details_1.png)
-![Agents Details View](../images/03_images/agent_summary/agent_details_2.png)
+![Agents Details View 2](../images/03_images/agent_summary/agent_details_2.png)
 
 ---
 
@@ -153,7 +153,7 @@ in lab: seeing integrity events normal, confirms FIM is working.
 When you are in the Agent Details page, to view Agent Configurations, click on the top left of that page. This shows which security and monitoring features are enabled and managed for this agent.
 
 ![Agents Configuration View](../images/03_images/agent_summary/agent_configuration_1.png)
-![Agents Configuration View](../images/03_images/agent_summary/agent_configuration_2.png)
+![Agents Configuration View 2](../images/03_images/agent_summary/agent_configuration_2.png)
 
 ---
 
@@ -242,4 +242,5 @@ you can also filter them based on the fields
 
 currently im just setting up one agent without doing anything so there will be no abnormal logs (i guess?)
 
-![Last 24 Hours Alerts Panel](../images/03_images/last_24_hours_alerts/discover_1.png)
+![Last 24 Hours Alerts more details](../images/03_images/last_24_hours_alerts/discover_1.png)
+![Last 24 Hours Alerts more details 2](../images/03_images/last_24_hours_alerts/discover_2.png)
