@@ -1,6 +1,6 @@
 # Wazuh Dashboard – Overview
 
-This is my overview of the **Overview** page in the Wazuh dashboard. The Overview page gives you a quick summary of how your agents are doing and what alerts have been popping up recently. It's a good way to check that everything is working like it should.
+quick overview of the Overview page in the wazuh dashboard. shows summary of agents and recent alerts. good way to check everything is working.
 
 ---
 
@@ -8,15 +8,15 @@ This is my overview of the **Overview** page in the Wazuh dashboard. The Overvie
 
 ### What it is
 
-The **Agents Summary** panel shows you the connection status of all your enrolled Wazuh agents.
+agents summary panel shows connection status of all enrolled agents.
 
-Agents are grouped by status, like:
+agents grouped by status:
 - Active
 - Disconnected
 - Pending
 - Never connected
 
-This panel tells you whether your endpoints are **visible and talking** to the Wazuh manager. It's just about connectivity - it doesn't tell you about threats, alerts, or system health beyond whether they're connected.
+tells you if endpoints are visible and talking to manager. just connectivity stuff, not about threats or alerts beyond connection status.
 
 ![Agents Summary Panel](../images/03_images/agent_summary/agent_summary.png)
 
@@ -26,7 +26,7 @@ This panel tells you whether your endpoints are **visible and talking** to the W
 
 ### Agent Details 
 
-When you click on an individual agent from the Agents Summary panel, Wazuh shows you a detailed view with the **current state, activity level, and security context** for that specific endpoint.
+click on an agent from the summary panel to see detailed view with current state, activity level, and security context for that endpoint.
 
 ![Agents Details View](../images/03_images/agent_summary/agent_details_1.png)
 ![Agents Details View](../images/03_images/agent_summary/agent_details_2.png)
@@ -35,144 +35,116 @@ When you click on an individual agent from the Agents Summary panel, Wazuh shows
 
 #### Agent Identity and Status
 
-This section gives you the basic info about the agent and whether it's healthy.
+basic info about agent and health status.
 
-It includes:
-- **Agent ID and name** - How Wazuh identifies this agent
-- **Status** - Whether the agent is currently active
-- **IP address** - Where the endpoint is on the network
-- **Agent version** - What version of the Wazuh agent is installed
-- **Operating system** - OS and version the agent is reporting
-- **Group** - Which agent group it's in (this determines what config gets applied)
-- **Cluster node** - Which manager node is handling this agent
-- **Registration date** - When the agent was enrolled
-- **Last keep-alive** - When the agent last checked in
+includes:
+- agent id and name - how wazuh identifies it
+- status - if agent is currently active
+- ip address - where endpoint is on network
+- agent version - what version installed
+- operating system - os and version reported
+- group - which agent group (determines config applied)
+- cluster node - which manager node handling it
+- registration date - when enrolled
+- last keep-alive - when last checked in
 
-**Why this matters**  
-This section confirms that the agent is:
-- Properly enrolled
-- Actively communicating
-- Sending up-to-date data
-
-Basically, it tells you whether you can trust the data you're seeing below.
+confirms agent is properly enrolled, actively communicating, sending up-to-date data. basically tells you if you can trust the data below.
 
 ---
 
 #### System Inventory
 
-The System Inventory section shows basic hardware and host info that the agent collected.
+shows basic hardware and host info agent collected.
 
-It usually includes:
-- CPU model and number of cores
-- Available memory
-- Hostname
-- Serial number (often missing for VMs)
+usually includes:
+- cpu model and cores
+- available memory
+- hostname
+- serial number (often missing for vms)
 
-**Why this matters**  
-Gives you context about the endpoint without needing an external inventory system.
+gives context about endpoint without external inventory system.
 
-**In a lab**  
-Don't be surprised if you see low resource values and missing serial numbers - that's normal for virtual machines. The fact that this data is here at all means **inventory collection is working**.
+in lab: low resource values and missing serial numbers normal for vms. fact that data is here means inventory collection is working.
 
 ---
 
 #### Events Count Evolution
 
-This section shows you a graph of how many events the agent has been generating over time.
+graph showing how many events agent generated over time.
 
-**Why this matters**
-- Shows overall activity level
-- Highlights sudden spikes or weird increases in event generation
+shows overall activity level, highlights sudden spikes or weird increases.
 
-**In a lab**  
-A mostly flat or low-activity graph is totally normal in a quiet lab environment.
+in lab: mostly flat or low-activity graph normal in quiet lab.
 
 ---
 
 #### MITRE ATT&CK
 
-The MITRE ATT&CK section shows you how alerts from this agent map to **MITRE ATT&CK tactics**.
+shows how alerts from agent map to MITRE ATT&CK tactics.
 
-**Why this matters**
-- Categorizes detection rules into high-level adversary behavior classes
-- Gives you context on what *types* of behaviors the rules are catching
+categorizes detection rules into high-level adversary behavior classes. gives context on what types of behaviors rules are catching.
 
-**In a lab**  
-Seeing tactics like Defense Evasion or Privilege Escalation in a lab is pretty common and usually nothing to worry about.
+in lab: seeing tactics like defense evasion or privilege escalation pretty common, usually nothing to worry about.
 
 ---
 
 #### Compliance
 
-The Compliance section maps alerts and checks to compliance frameworks like **PCI DSS**.
+maps alerts and checks to compliance frameworks like PCI DSS.
 
-**Why this matters**
-- Shows which compliance control categories are associated with what you're seeing
-- Helps with compliance-oriented visibility and reporting
+shows which compliance control categories associated with what you're seeing. helps with compliance visibility and reporting.
 
-**In a lab**  
-If you see charts with data, that's expected and doesn't mean you're non-compliant or at risk.
+in lab: charts with data expected, doesn't mean non-compliant or at risk.
 
 ---
 
 #### Vulnerability Detection
 
-The **Vulnerability Detection** section shows you known vulnerabilities found on the agent based on installed packages.
+shows known vulnerabilities found on agent based on installed packages.
 
-It includes:
-- Counts of detected vulnerabilities grouped by severity (Critical, High, Medium, Low)
-- A list of the most frequently affected packages, if any
+includes:
+- counts grouped by severity (critical, high, medium, low)
+- list of most frequently affected packages if any
 
-**Why this matters**
-- Shows you known software vulnerabilities affecting the endpoint
-- Confirms that vulnerability scanning is enabled and running
+shows known software vulnerabilities affecting endpoint. confirms vulnerability scanning enabled and running.
 
-**Important note**  
-Detected vulnerabilities mean **potential exposure**, not that something has been exploited. And just because you don't see any findings doesn't mean the system is secure.
+note: detected vulnerabilities mean potential exposure, not exploitation. no findings doesn't mean system is secure.
 
-**In a lab**  
-Zero or low findings are common in fresh or lightly used lab systems - don't expect this to reflect real-world exposure levels.
+in lab: zero or low findings common in fresh lab systems, don't expect real-world exposure levels.
 
 ---
 
 #### Security Configuration Assessment (SCA)
 
-The **SCA: Latest scans** section shows results from recent configuration assessments against security benchmarks.
+shows results from recent configuration assessments against security benchmarks.
 
-It includes:
-- The benchmark or policy used (like CIS Ubuntu Linux Benchmark)
-- When the last scan completed
-- Number of passed, failed, and not applicable checks
-- An overall compliance score
+includes:
+- benchmark or policy used (like CIS Ubuntu Linux Benchmark)
+- when last scan completed
+- number of passed, failed, not applicable checks
+- overall compliance score
 
-**Why this matters**
-- Evaluates system configuration against hardening guidelines
-- Gives you a baseline view of security posture
+evaluates system config against hardening guidelines. gives baseline view of security posture.
 
-**Important note**  
-Low scores are super common on default installations. This doesn't mean something is misconfigured or compromised.
+note: low scores super common on default installations. doesn't mean misconfigured or compromised.
 
-**In a lab**  
-Failing checks are totally expected unless you've explicitly hardened the system.
+in lab: failing checks totally expected unless system explicitly hardened.
 
 ---
 
 #### File Integrity Monitoring (FIM)
 
-The **FIM: Recent events** section shows recent file integrity events detected on the agent.
+shows recent file integrity events detected on agent.
 
-It includes:
-- When the event happened
-- File path that was affected
-- What action was performed (like modified)
-- Rule description and severity level
+includes:
+- when event happened
+- file path affected
+- action performed (like modified)
+- rule description and severity level
 
-**Why this matters**
-- Tracks changes to monitored files and directories
-- Gives you visibility into filesystem activity
+tracks changes to monitored files and directories. gives visibility into filesystem activity.
 
-**In a lab**  
-Seeing integrity events in a lab environment is normal and actually confirms that file integrity monitoring is working.
+in lab: seeing integrity events normal, confirms FIM is working.
 
 ---
 
@@ -211,7 +183,7 @@ Includes:
 
  - OpenSCAP: Automated compliance checks using SCAP standards. Security Content Automation Protocol (SCAP) is a National Institute of Standards and Technology (NIST) framework of interoperable specifications that standardizes the format of security data to automate vulnerability management, configuration assessment, and policy compliance.
 
- - CIS-CAT (Center for Internet Security – Configuration Assessment Tool): CIS benchmark scanning. Checks an operating system or application’s configuration and compares it against CIS security hardening benchmarks. E.g.: Does this system follow recommended security hardening settings?
+ - CIS-CAT (Center for Internet Security – Configuration Assessment Tool): CIS benchmark scanning. Checks an operating system or application's configuration and compares it against CIS security hardening benchmarks. E.g.: Does this system follow recommended security hardening settings?
 ---
 #### System Threads and Incident Response
 
@@ -256,14 +228,14 @@ notes:
 
 ### What it is
 
-The **Last 24 Hours Alerts** panel shows you how many alerts Wazuh generated in the last 24 hours.
+last 24 hours alerts panel shows how many alerts wazuh generated in last 24 hours.
 
-Alerts are usually broken down by:
-- Time
-- Severity level
+alerts broken down by:
+- time
+- severity level
 
-This panel gives you a quick look at **recent alert activity** and helps you spot sudden increases or weird patterns in alert volume.
+quick look at recent alert activity, helps spot sudden increases or weird patterns in alert volume.
 
-Keep in mind - these are **signals generated by detection rules**, not confirmed security incidents.
+keep in mind - these are signals generated by detection rules, not confirmed security incidents.
 
 ![Last 24 Hours Alerts Panel](../images/03_images/last_24_hours_alerts/last_24_hours.png)
