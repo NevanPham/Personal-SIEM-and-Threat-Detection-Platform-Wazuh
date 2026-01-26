@@ -1,56 +1,54 @@
 ## Adding a Wazuh Agent (Endpoint)
 
-This is how I set up and enrolled a Wazuh agent in my lab. The agent runs on a separate Ubuntu VM and sends data back to the Wazuh manager so I can monitor it.
+how i set up + enrolled a wazuh agent in my lab. agent runs on a separate ubuntu vm and sends stuff back to the manager.
 
 ## How It Works
 
-Wazuh uses a manager–agent setup.
+wazuh is basically manager + agents.
 
 ### Manager (Already Running)
 
-The manager does the heavy lifting:
-- Receives logs and events from agents
-- Runs detection rules and correlation
-- Stores everything in the indexer
-- Serves up the dashboard
+manager does the heavy lifting:
+- receives logs/events from agents
+- runs rules / correlation
+- stores data in indexer
+- dashboard reads from it
 
 ### Agent (What We're Adding)
 
-The agent is a lightweight thing that runs on endpoints:
-- Collects system logs and security events
-- Does file integrity monitoring (FIM)
-- Sends data securely to the manager
-- Shows up as a registered endpoint in the dashboard
+agent runs on endpoints:
+- collects logs + security events
+- does fim (file integrity monitoring)
+- sends data to manager
+- shows up in dashboard
 
-⚠️ **Important**  
-You need to install the agent on a **separate VM**. Installing it on the manager VM doesn't make sense - you can't monitor the thing that's doing the monitoring!
+important: install agent on a separate vm. installing it on the manager kinda defeats the point.
 
 ## What You'll Need
 
 ### Virtual Machines
 
-- **1 × Wazuh Manager VM** (from `01-setup.md`)
-- **1 × Agent (Client) VM**
-  Ubuntu Server or Desktop works fine
+- 1x wazuh manager vm (from `01-setup.md`)
+- 1x agent vm (ubuntu server/desktop is fine)
 
 ### Hardware Notes
 
-**Manager VM**
-- Minimum: **4 GB RAM** (but it's pretty unstable at this)
-- Recommended: **8 GB RAM** - this makes startup and agent enrollment much more reliable
+manager vm:
+- min: 4gb ram (can be unstable)
+- recommend: 8gb ram (way smoother for startup/enrollment)
 
-**Agent VM**
-- **1–2 GB RAM** is plenty
+agent vm:
+- 1–2gb ram is fine
 
 ### Network
 
-- Both VMs need to be able to talk to each other
-- Same NAT or host-only network is fine
-- IP addresses work - you don't need DNS
+- both vms need to talk to each other
+- same nat / host-only network works
+- ips are fine, no dns needed
 
 ### Firewall Setup (Manager VM)
 
-If you have UFW enabled on the manager, you need to open these ports before agents can enroll:
+if ufw is enabled on manager, open these ports before enrolling agents:
 
 ```bash
 # Agent enrollment
@@ -63,70 +61,68 @@ sudo ufw allow 1514/udp
 sudo ufw reload
 ```
 
-Without TCP/1515, agents will fail to enroll even if everything else is running.
+if 1515/tcp is blocked, agent enrollment will fail even if everything else is up.
 
-**What these ports do:**
-- **1515/tcp**: Used for **agent enrollment** - this is where `agent-auth` connects. If this is blocked, new agents can't register.
-- **1514/tcp** and **1514/udp**: Used for **log/telemetry traffic** from agents to the manager.
-- **`sudo ufw reload`**: Applies the new firewall rules without rebooting.
+what the ports are for:
+- 1515/tcp = agent enrollment (`agent-auth` talks here)
+- 1514/tcp + 1514/udp = agent logs/telemetry -> manager
+- `sudo ufw reload` applies rules
 
 ## What You'll See in the Dashboard
 
 ### Before Adding an Agent
 
-When you don't have any agents yet, the **Endpoints** page will be empty and show a prompt to deploy one.
+if no agents yet, endpoints page is basically empty and tells u to deploy one.
 
 ### After Enrollment
 
-Once an agent connects successfully, it shows up as **Active** with OS, IP, and version info populated.
+once enrolled + connected, it should show up as Active with os/ip/version.
 
 ## Deploying the Agent (Using the Dashboard)
 
-The Wazuh Dashboard has a nice guided workflow that generates the right installation commands for your agent's OS.
+dashboard has a guided flow that generates install commands for ur agent os.
 
-Just to be clear: the dashboard doesn't install the agent for you. You still need to run all the commands on the **agent VM**.
+note: dashboard doesn’t install it for u. u still run the commands on the agent vm.
 
 ### Step 1: Start Agent Deployment
 
-- Open the Wazuh Dashboard
-- Go to **Endpoints**
-- Click **Deploy new agent**
+- open dashboard
+- go to endpoints
+- click deploy new agent
 
 ![Deploy new agent button](../images/02_images/deploy_agent.png)
 
 ### Step 2: Pick Your Platform
 
-Choose the operating system and architecture of your agent VM.
+pick os + architecture for agent vm.
 
-For Ubuntu labs:
-- Select **Linux**
-- Select **DEB amd64**
+for ubuntu labs:
+- linux
+- deb amd64
 
-The dashboard will customize the commands based on what you pick.
+dashboard will customize commands based on selection.
 
 ![Select platform and package](../images/02_images/select_package.png)
 
 ### Step 3: Enter Agent Name and Server Address
 
-In the dashboard, enter:
-- **Agent name**: Something descriptive (like `ubuntu-client-01`)
-- **Server address**: The Wazuh manager IP address
-  - Use the private IP (like `192.168.65.x`)
-  - You don't need an FQDN for labs
+in dashboard enter:
+- agent name: something like `ubuntu-client-01`
+- server address: manager ip (private ip is fine, fqdn not needed for lab)
 
-This address is what the agent uses to talk to the manager.
+this is what the agent uses to talk to the manager.
 
 ### Step 4: Install the Agent (On the Agent VM)
 
-The dashboard will show you installation commands. Run these on the **agent VM**:
+dashboard shows install commands. run on the agent vm:
 
-Download the agent package:
+download agent package:
 
 ```bash
 wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.14.1-1_amd64.deb
 ```
 
-Install and register the agent (replace `YOUR_MANAGER_IP` with your manager IP):
+install + set manager ip + agent name (replace `YOUR_MANAGER_IP`):
 
 ```bash
 sudo WAZUH_MANAGER="YOUR_MANAGER_IP" \
@@ -134,16 +130,14 @@ sudo WAZUH_MANAGER="YOUR_MANAGER_IP" \
      dpkg -i wazuh-agent_4.14.1-1_amd64.deb
 ```
 
-**What these parameters do:**
-- **`WAZUH_MANAGER`**: The IP address or hostname of your **Wazuh manager**
-  - In a lab, this is usually the private IP of your Wazuh VM (like `192.168.65.x`)
-- **`WAZUH_AGENT_NAME`**: The **name** this endpoint will have in the dashboard and CLI (like `ubuntu-client-01`)
-  - You can make this whatever you want - `web01`, `win10-lab`, etc.
-- **`dpkg -i`**: Installs the downloaded `.deb` package on Ubuntu/Debian
+quick note:
+- `WAZUH_MANAGER` = manager ip/host
+- `WAZUH_AGENT_NAME` = how it shows up in dashboard (name it whatever)
+- `dpkg -i` installs the `.deb`
 
 ### Step 5: Start the Agent Service
 
-After installation, enable and start the agent:
+enable + start agent:
 
 ```bash
 sudo systemctl daemon-reload
@@ -151,7 +145,7 @@ sudo systemctl enable wazuh-agent
 sudo systemctl start wazuh-agent
 ```
 
-Check that it's running:
+check:
 
 ```bash
 sudo systemctl status wazuh-agent
@@ -161,26 +155,25 @@ sudo systemctl status wazuh-agent
 
 ## Agent Enrollment (You Have to Do This!)
 
-Just installing the agent package isn't enough. Each agent needs to authenticate with the manager.
+installing package alone isn’t enough. agent has to enroll/auth with manager.
 
-Run this on the **agent VM**:
+run on agent vm:
 
 ```bash
 sudo /var/ossec/bin/agent-auth -m YOUR_MANAGER_IP
 ```
 
-**What this does:**
-- **`/var/ossec/bin/agent-auth`**: The Wazuh **agent enrollment client**
-- **`-m YOUR_MANAGER_IP`**: The `-m` option tells the agent which **manager IP** to contact for registration
-  - This needs to match the IP you used in `WAZUH_MANAGER` and in the dashboard server address
+notes:
+- `agent-auth` = enrollment client
+- `-m` = manager ip (should match what u used above/in dashboard)
 
-You should see:
+expected:
 
 ```text
 INFO: Authorization successful.
 ```
 
-Then restart the agent:
+restart agent:
 
 ```bash
 sudo systemctl restart wazuh-agent
@@ -190,18 +183,15 @@ sudo systemctl restart wazuh-agent
 
 ### On the Manager VM
 
-List all registered agents:
+list registered agents:
 
 ```bash
 sudo /var/ossec/bin/agent_control -lc
 ```
 
-**What this does:**
-- **`agent_control`**: Manager-side tool to **query and control agents**
-- **`-l`**: List all agents the manager knows about
-- **`-c`**: Include **connection status** (active, never connected, disconnected, etc.) in the output
+`-lc` lists agents + connection status.
 
-You should see something like:
+should see something like:
 
 ```text
 ID: 001, Name: ubuntu-client-01, Active
@@ -209,24 +199,24 @@ ID: 001, Name: ubuntu-client-01, Active
 
 ### In the Dashboard
 
-- Go to **Endpoints**
-- Check that the agent status is **Active**
+- go to endpoints
+- check status is Active
 
-The agent should now show up in the dashboard with status **Active**, displaying OS, IP address, and version info.
+agent should show up with os/ip/version info.
 
 ![Active agent in dashboard](../images/02_images/agent_active.png)
 
 ## Common Issues
 
-- **Agent service running ≠ agent enrolled** - Just because the service is running doesn't mean it's enrolled!
-- **UFW silently blocking TCP/1515** - This is a sneaky one, make sure that port is open
-- **Manager running on low RAM delaying enrollment** - If your manager only has 4 GB, enrollment can take a while or fail
+- agent service running ≠ agent enrolled
+- ufw blocking 1515/tcp
+- manager low ram = enrollment slow/flaky
 
-If the agent doesn't show up:
+if agent doesn’t show up:
 
-- Make sure manager services are running
-- Check that port **1515** is listening
-- Look at the agent logs:
+- make sure manager services are running
+- check port 1515 is listening / not blocked
+- check agent logs:
 
 ```bash
 sudo tail -f /var/ossec/logs/ossec.log
