@@ -176,6 +176,28 @@ Seeing integrity events in a lab environment is normal and actually confirms tha
 
 ---
 
+### Agent Configurations
+
+When you are in the Agent Details page, to view Agent Configurations, click on the top left of that page. This shows which security and monitoring features are enabled and managed for this agent.
+
+![Agents Configuration View](../images/03_images/agent_summary/agent_configuration_1.png)
+![Agents Configuration View](../images/03_images/agent_summary/agent_configuration_2.png)
+
+---
+
+#### Configuration Status and Groups
+---
+#### Main Configurations
+---
+#### Auditing and Policy Monitoring
+---
+#### System Threads and Incident Response
+---
+#### Log data analysis
+---
+#### Cloud security monitoring
+
+
 ## Last 24 Hours Alerts
 
 ### What it is
