@@ -186,8 +186,15 @@ When you are in the Agent Details page, to view Agent Configurations, click on t
 ---
 
 #### Configuration Status and Groups
+
+Top of the page, display which group is the agent in (default) and synchronization status indicating whether the agent is using the latest configuration.
+
 ---
+
 #### Main Configurations
+
+Contain core agent behaviour and communication settings
+
 ---
 #### Auditing and Policy Monitoring
 ---
