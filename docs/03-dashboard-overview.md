@@ -228,8 +228,28 @@ notes: Defines what advanced telemetry and response actions the agent is capable
 
 ---
 #### Log data analysis
+
+controls how logs and file changes are monitored. Probably very important.
+
+includes:
+ - Log collection: Ingesting logs from files, syslog, or Windows events
+ - Integrity monitoring: File Integrity Monitoring (FIM)
+
+Notes: threat detection and alert for events
+
 ---
 #### Cloud security monitoring
+
+contains cloud stuff and external services
+
+includes: 
+ - Amazon S3: monitor logs from aws services
+ - Google Cloud Pub/Sub: logs from google cloud services
+ - Github: repos events and permission changes and sus activity
+
+notes: 
+ - agent can be extended to monitor cloud and SaaS service
+ - probably not for me atm cause im too poor to do any cloud services, github maybe but we will see
 
 
 ## Last 24 Hours Alerts
