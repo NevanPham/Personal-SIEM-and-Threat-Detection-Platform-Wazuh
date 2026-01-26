@@ -8,7 +8,7 @@ Useful commands and quick tips for managing your Wazuh SIEM lab.
 
 When an agent shows as "Disconnected" in the dashboard (e.g., from a deleted VM or old installation), you can clean it up using the cli.
 
-### Option 1: Remove via CLI (Recommended)
+### Option 1: Remove via CLI (knew it becuz i chatgpted)
 
 Run this on the **Wazuh Manager VM**:
 
@@ -29,11 +29,11 @@ Restart the manager for clean state:
 sudo systemctl restart wazuh-manager
 ```
 
-Refresh dashboard, you should see only the active agents.
+Refresh dashboard, now u should see only the active agents.
 
 ---
 
-### Option 2: Remove via Dashboard (Optional)
+### Option 2: Remove via Dashboard (probablu better to figure out on your own)
 
 If you prefer the GUI:
 
