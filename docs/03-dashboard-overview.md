@@ -193,7 +193,13 @@ Top of the page, display which group is the agent in (default) and synchronizati
 
 #### Main Configurations
 
-Contain core agent behaviour and communication settings
+Contain core agent behaviour and communication settings.
+
+Includes:
+ - Global Configuration: Logging and general agent behavior
+ - Communication: How the agent connects to the Wazuh manager
+ - Anti-flooding settings: Controls to prevent event flooding
+ - Labels: Custom metadata added to agent alerts
 
 ---
 #### Auditing and Policy Monitoring
