@@ -214,6 +214,18 @@ Includes:
  - CIS-CAT (Center for Internet Security – Configuration Assessment Tool): CIS benchmark scanning. Checks an operating system or application’s configuration and compares it against CIS security hardening benchmarks. E.g.: Does this system follow recommended security hardening settings?
 ---
 #### System Threads and Incident Response
+
+lists modules related to advanced detection and response capabilities.
+
+includes:
+ - Osquery: Query-based system inspection
+ - Inventory data: Collection of system and package metadata
+ - Active response: Automated response actions
+ - Commands: Remote command execution framework
+ - Docker listener: Monitoring Docker container activity
+
+notes: Defines what advanced telemetry and response actions the agent is capable of performing. Not very important rn.
+
 ---
 #### Log data analysis
 ---
