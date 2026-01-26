@@ -70,19 +70,13 @@ what the ports are for:
 
 ## What You'll See in the Dashboard
 
-### Before Adding an Agent
-
 if no agents yet, endpoints page is basically empty and tells u to deploy one.
-
-### After Enrollment
 
 once enrolled + connected, it should show up as Active with os/ip/version.
 
 ## Deploying the Agent (Using the Dashboard)
 
 dashboard has a guided flow that generates install commands for ur agent os.
-
-note: dashboard doesn’t install it for u. u still run the commands on the agent vm.
 
 ### Step 1: Start Agent Deployment
 
