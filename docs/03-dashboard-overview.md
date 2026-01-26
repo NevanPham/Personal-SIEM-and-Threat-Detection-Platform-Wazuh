@@ -203,6 +203,15 @@ Includes:
 
 ---
 #### Auditing and Policy Monitoring
+
+controls features related to configuration compliance and system hardening.
+
+Includes:
+ - Policy monitoring: Security policy and baseline checks
+
+ - OpenSCAP: Automated compliance checks using SCAP standards. Security Content Automation Protocol (SCAP) is a National Institute of Standards and Technology (NIST) framework of interoperable specifications that standardizes the format of security data to automate vulnerability management, configuration assessment, and policy compliance.
+
+ - CIS-CAT (Center for Internet Security – Configuration Assessment Tool): CIS benchmark scanning. Checks an operating system or application’s configuration and compares it against CIS security hardening benchmarks. E.g.: Does this system follow recommended security hardening settings?
 ---
 #### System Threads and Incident Response
 ---
