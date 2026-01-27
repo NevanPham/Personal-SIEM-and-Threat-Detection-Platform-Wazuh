@@ -22,14 +22,12 @@ agent runs on endpoints:
 - sends data to manager
 - shows up in dashboard
 
-important: install agent on a separate vm. installing it on the manager kinda defeats the point.
-
 ## What You'll Need
 
 ### Virtual Machines
 
 - 1x wazuh manager vm (from `01-setup.md`)
-- 1x agent vm (ubuntu server/desktop is fine)
+- 1x agent vm (ubuntu server/desktop is fine). installing it on the manager kinda defeats the point.
 
 ### Hardware Notes
 
