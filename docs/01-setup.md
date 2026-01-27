@@ -1,6 +1,6 @@
 # Wazuh Setup (Lab)
 
-how i set up wazuh on a single ubuntu vm (all-in-one: manager + indexer + dashboard). lab setup, not prod.
+how i set up wazuh on a single ubuntu vm (all-in-one: manager + indexer + dashboard). 
 
 ## My Setup
 - ubuntu (64-bit)
@@ -11,7 +11,7 @@ how i set up wazuh on a single ubuntu vm (all-in-one: manager + indexer + dashbo
 - 2+ vcpu
 - 4+ gb ram (8gb recommended)
 - 25+ gb disk
-- internet
+
 
 ## Before You Start
 - fresh ubuntu vm
@@ -136,4 +136,3 @@ sudo reboot
 - ubuntu iso: [ubuntu.com/download/desktop](https://ubuntu.com/download/desktop)
 - wazuh quickstart: [Wazuh Quickstart](https://documentation.wazuh.com/current/quickstart.html)
 - installer saves creds/certs in `wazuh-install-files.tar`
-- this is single-node for simplicity, prod usually separates components
