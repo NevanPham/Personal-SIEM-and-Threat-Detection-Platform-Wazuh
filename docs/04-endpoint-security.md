@@ -10,6 +10,8 @@ sca just scan to verify if the agents have any weaknesses and reduce the attack 
 
 There will be 3 options on the top left when u are in this page:
 
+---
+
 ### Dashboard
 
 When u get into this page, u have an option to choose which agent will you scan. After choosing and scanning the agent using the CIS benchmark, it will return a dashboard like this:
@@ -33,6 +35,20 @@ Inventory is basically just showing each scan as an item, and simple results lik
 ---
 
 ### Events
+
+Events is sort of like inventory, but a little bit more detailed, and showing every scan and events in bar charts in time order.
+
+![Events](../images/04_images/configuration_assessment/sca_events.png)
+
+When clicking to the magnifier next to the timestamp, you can have more detailed version of that scan
+
+![Document Details](../images/04_images/configuration_assessment/sca_events_document_detail.png)
+
+In this document details, u have the scan's detailed info
+
+when u click View Surrounding Documents, it will navigate to the discover page and show all the event logs which is is the last 24 hours alerts panel.
+
+but besides from that, I would say these three sub-pages within sca serves very similar purposes and it depends on how you want to view and observe for info, like agent name and manager, policy, description, etc.
 
 ## Malware Detection
 
