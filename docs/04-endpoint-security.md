@@ -4,8 +4,6 @@ Check for endpoint's security baseline and guidelines and see if everything is u
 
 ![Endpoint Security Panel](../images/04_images/endpoint_sec_overview.png)
 
----
-
 ## Configuration Assessment
 
 sca just scan to verify if the agents have any weaknesses and reduce the attack surface
@@ -16,7 +14,7 @@ There will be 3 options on the top left when u are in this page:
 
 When u get into this page, u have an option to choose which agent will you scan. After choosing and scanning the agent using the CIS benchmark, it will return a dashboard like this:
 
-![Dashboard](../images/04_images/sca_dashboard.png)
+![Dashboard](../images/04_images/configuration_assessment/sca_dashboard.png)
 
 Apparently the default given Ubuntu when i downloaded from the official page failed over 50% of the check.
 
@@ -30,7 +28,9 @@ You can click into each ID to see the rationale and desc on why its failing and 
 
 Inventory is basically just showing each scan as an item, and simple results like sucessful and failed check. 
 
-![Inventory](../images/04_images/sca_inventory.png)
+![Inventory](../images/04_images/configuration_assessment/sca_inventory.png)
+
+---
 
 ### Events
 
