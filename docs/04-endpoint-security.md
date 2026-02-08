@@ -24,7 +24,13 @@ from my research, it looks like CIS benchmarks are hardening standards, so its b
 
 You can click into each ID to see the rationale and desc on why its failing and what to fix.
 
+---
+
 ### Inventory
+
+Inventory is basically just showing each scan as an item, and simple results like sucessful and failed check. 
+
+![Inventory](../images/04_images/sca_inventory.png)
 
 ### Events
 
