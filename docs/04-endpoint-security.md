@@ -61,6 +61,9 @@ How it works:
  - FIM watches files and reports changes
  - Rules + IOCs decide if a change looks suspicious or known-bad
  - Rootcheck looks for rootkit-style behavior
+    - E.g.: known rootkit signatures, suspicious system behaviors, hidden files, processes, or ports
+    - Good for catching stealthy techniques
+    - Can be noisy or outdated if not tuned
  - AV logs (ClamAV / Defender) are collected if present
  - Optional enrichment (VirusTotal, YARA) adds context
 
