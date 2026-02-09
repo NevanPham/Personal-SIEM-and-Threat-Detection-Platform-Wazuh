@@ -54,6 +54,8 @@ but besides from that, I would say these three sub-pages within sca serves very 
 
 detect malware, but not using scan like antivirus, but combining signals from multiple modules and applying rules
 
+![Malware Detection Dashboard](../images/04_images/malware_detection/malware_detection_dashboard.png)
+
 How it works:
 
  - FIM watches files and reports changes
