@@ -52,5 +52,15 @@ but besides from that, I would say these three sub-pages within sca serves very 
 
 ## Malware Detection
 
+detect malware, but not using scan like antivirus, but combining signals from multiple modules and applying rules
+
+How it works:
+
+ - FIM watches files and reports changes
+ - Rules + IOCs decide if a change looks suspicious or known-bad
+ - Rootcheck looks for rootkit-style behavior
+ - AV logs (ClamAV / Defender) are collected if present
+ - Optional enrichment (VirusTotal, YARA) adds context
+
 ## File Integrity Monitoring
 
